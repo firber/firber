@@ -17,12 +17,13 @@ class RegistrationForm(Form):
     username = StringField('用户名称', validators=[DataRequired(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, '用户名称应只包含字母、数字、下划线和点号')])
     password = PasswordField('密码', validators=[DataRequired(), EqualTo('password2', message='密码必须前后一致')])
     password2 = PasswordField('确认密码', validators=[DataRequired()])
+    submit = SubmitField('注册')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('电子邮件已经注册。')
 
-    def validate_usernmae(self, field):
+    def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('用户名称已经使用！')
 
