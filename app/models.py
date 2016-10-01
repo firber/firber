@@ -2,8 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
-from . import login_manager
-from . import db
+from . import login_manager, db
 
 
 class Role(db.Model):
@@ -55,9 +54,21 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-    #def __init__(self, username, role):
-     #   self.username = username
-     #   self.role = role
+    def generate_reset_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id})
+
+    def reset_password(self, token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('reset') != self.id:
+            return False
+        self.password = new_password
+        db.session.add(self)
+        return True
 
     def __repr__(self):
         return '<User %r>' % self.username
