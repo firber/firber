@@ -1,10 +1,26 @@
-from flask import render_template,redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
-from ..models import User
 from .. import db
-from .forms import LoginForm, RegistrationForm
+from ..models import User
 from ..email import send_email
+from .forms import LoginForm, RegistrationForm, ChangePasswordForm
+
+# 过滤未确认的账户，导向 /auth/unconfirmed 路由
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated \
+            and not current_user.confirmed \
+            and request.endpoint[:5] != 'auth.'\
+            and request.endpoint != 'static':
+        return redirect(url_for('auth.unconfirmed'))
+
+# 处理未确认的账户
+@auth.route('/unconfirmed')
+def unconfirmed():
+    if current_user.is_anonymous or current_user.confirmed:
+        return redirect(url_for('main.index'))
+    return render_template('auth/unconfirmed.html')
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -38,7 +54,7 @@ def register():
         token = user.generate_confirmation_token()
         send_email(user.email, '确认你的账户', 'auth/email/confirm', user=user, token=token)
         flash('一份确认邮件已经发往你的邮箱！')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
 
@@ -55,24 +71,6 @@ def confirm(token):
     return redirect(url_for('main.index'))
 
 
-# 过滤未确认的账户，导向 /auth/unconfirmed 路由
-@auth.before_app_request
-def before_request():
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
-            and request.endpoint[:5] != 'auth.'\
-            and request.endpoint != 'static':
-        return redirect(url_for('auth.unconfirmed'))
-
-
-# 处理未确认的账户
-@auth.route('/unconfirmed')
-def unconfirmed():
-    if current_user.is_anonymous or current_user.confirmed:
-        return redirect(url_for('main,index'))
-    return render_template('auth/unconfirmed.html')
-
-
 # 重新发送账户确认邮件
 @auth.route('/confirm')
 @login_required
@@ -83,3 +81,17 @@ def resend_confirmation():
     return redirect(url_for('main.index'))
 
 
+@auth.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = form.password.data
+            db.session.add(current_user)
+            logout_user()
+            flash('你的密码已经更新,请重新登录')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('密码无效！')
+    return render_template('auth/change_password.html', form=form)
