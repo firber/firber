@@ -1,7 +1,8 @@
 亲爱的 {{ user.usernmae}},
     欢迎来到侧巫掠的小屋！
     为了确认你的账号，请点击以下的链接：
-    {{ url_for('auth.comfirm', token=token, _external=True) }}
+    {{ url_for('auth.confirm', token=token, _external=True) }}
 
-    你的
+    你的，
     侧巫掠守护者
+    注：请勿回复该邮件。

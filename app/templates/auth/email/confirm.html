@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<p>亲爱的 {{ user.username }}，</p>
+<p>欢迎来到<b>侧巫掠的小屋</b>！</p>
+<p>为了确认你的账号，请点击以下的链接：</p>
+<p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
+<p>你的，</p>
+<p>侧巫掠守护者</p>
+<p><small>注：请勿回复该邮件。</small></p>

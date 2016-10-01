@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}侧巫掠 - 确认你的账号{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>你好，{{ current_user.username }}！</h1>
+    <h2>你还未确认你的账号。</h2>
+    <p>在你进入该页面前你需要确认你的账号。检查你的邮箱，你会收到一封含有一个确认链接的电子邮件。</p>
+    <p>需要另一封确认邮件？<a href="{{ url_for('auth.resend_confirmation') }}">点击这里</a> </p>
+</div>
+{% endblock %}
