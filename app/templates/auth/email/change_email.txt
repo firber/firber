@@ -1,0 +1,11 @@
+亲爱的 {{ user.username }},
+
+为了确认你的新邮箱，请点击以下链接：
+
+{{ url_for('auth.change_email', token=token, _external=True) }}
+
+你的
+
+侧巫掠守护者
+
+注意：请勿回复该邮件。

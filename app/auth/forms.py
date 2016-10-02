@@ -36,16 +36,26 @@ class ChangePasswordForm(Form):
 
 
 class PasswordResetRequestForm(Form):
-    email = StringField('电子邮件', validators=[DataRequired(), Length(1, 64), Email()])
+    email = StringField('电子邮箱', validators=[DataRequired(), Length(1, 64), Email()])
     submit = SubmitField('重置密码')
 
 
 class PasswordResetForm(Form):
-    email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
+    email = StringField('电子邮箱', validators=[DataRequired(), Length(1, 64), Email()])
     password = PasswordField('新密码', validators=[DataRequired(), EqualTo('password2', message='密码必须前后一致')])
     password2 = PasswordField('确认密码', validators=[DataRequired()])
     submit = SubmitField('密码重设')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first() is None:
-            raise ValidationError('Unknown email address.')
+            raise ValidationError('未知的电子邮箱地址')
+
+
+class ChangeEmailForm(Form):
+    email = StringField('新邮箱', validators=[DataRequired(), Length(1, 64), Email()])
+    password = PasswordField('密码', validators=[DataRequired()])
+    submit = SubmitField('更新邮箱')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('该邮箱已经注册！')
