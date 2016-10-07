@@ -44,3 +44,8 @@ class EditProfileAdminForm(Form):
         if field.data != self.user.username and \
                 User.query.filter_by(username=field.data).first():
             raise ValidationError('用户名已经被使用！')
+
+
+class PostForm(Form):
+    body = TextAreaField('写下你的想法', validators=[DataRequired()])
+    submit = SubmitField('提交')
