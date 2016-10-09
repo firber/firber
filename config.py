@@ -15,6 +15,7 @@ class Config:
     MAIL_SENDER = 'wangjingze314@163.com'
     ADMIN = os.environ.get('ADMIN')
     POSTS_PER_PAGE = 20
+    FOLLOWERS_PER_PAGE = 50
 
     @staticmethod
     def init_app(app):
