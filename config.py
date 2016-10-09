@@ -16,6 +16,7 @@ class Config:
     ADMIN = os.environ.get('ADMIN')
     POSTS_PER_PAGE = 20
     FOLLOWERS_PER_PAGE = 50
+    COMMENTS_PER_PAGE = 30
 
     @staticmethod
     def init_app(app):

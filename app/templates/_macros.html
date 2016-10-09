@@ -1,4 +1,4 @@
-{% macro pagination_widget(pagination, endpoint) %}
+{% macro pagination_widget(pagination, endpoint, fragment='') %}
 <ul class="pagination">
     {% if pagination.has_prev %}
     <li>
@@ -8,7 +8,7 @@
             {% else %}
                 #
             {% endif %}">
-            &laquo 上一页
+            &laquo; 上一页
         </a>
     </li>
     {% endif %}
@@ -16,11 +16,11 @@
         {% if p %}
             {% if p == pagination.page %}
             <li class="active">
-                <a href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ p }}</a>
+                <a href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ fragment }}</a>
             </li>
             {% else %}
             <li>
-                <a href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ p }}</a>
+                <a href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ fragment }}</a>
             </li>
             {% endif %}
         {% else %}
