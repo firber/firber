@@ -2,7 +2,7 @@
 
 {% block html_attribs %}lang = "zh-CN"{% endblock %}
 
-{% block title %}侧巫掠{% endblock %}
+{% block title %}知否{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -27,7 +27,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">侧巫掠</a>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">知否</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -78,4 +78,5 @@
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment() }}
+{{ moment.lang('zh-CN') }}
 {% endblock %}
