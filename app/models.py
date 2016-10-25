@@ -276,6 +276,7 @@ class AnonymousUser(AnonymousUserMixin):
 login_manager.anonymous_user = AnonymousUser
 
 
+# Flask-Login 加载用户的回调函数，用以标记 current_user
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
