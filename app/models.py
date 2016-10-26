@@ -26,6 +26,7 @@ class Role(db.Model):
     permissions = db.Column(db.Integer)
     users = db.relationship('User', backref='role', lazy='dynamic')
 
+    # 添加所有预设角色到数据库的类方法
     @staticmethod
     def insert_roles():
         roles = {
@@ -109,6 +110,7 @@ class User(UserMixin, db.Model):
             except IntegrityError:
                 db.session.rollback()
 
+    # 将用户设为自己的关注者
     @staticmethod
     def add_self_follows():
         for user in User.query.all():
@@ -119,14 +121,17 @@ class User(UserMixin, db.Model):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
-        if self.role is None:
+        # 定义默认的用户角色
+        if self.role is None:  # 若新建User类的实例对象时未定义用户角色
             if self.email == current_app.config['ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
-            if self.email is not None and self.avatar_hash is None:
-                self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
-            self.followed.append(Follow(followed=self))
+        # 缓存用户电邮地址的 MD5 散列值
+        if self.email is not None and self.avatar_hash is None:
+            self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
+        self.follow(self)  #新建用户关注自己
+        #self.followed.append(Follow(followed=self)) # 关注所有关注自己的用户 = 互相关注？
 
     @property
     def password(self):

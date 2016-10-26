@@ -27,9 +27,12 @@ def unconfirmed():
     return render_template('auth/unconfirmed.html')
 
 
+# 用户登录路由
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if current_user.is_authenticated:  # 若当前用户已经登录，则跳转到首页
+        return redirect(url_for('main.index'))
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
