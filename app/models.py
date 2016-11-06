@@ -58,7 +58,7 @@ class Follow(db.Model):
                             primary_key=True)
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                             primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow) #设置关注时间为当前时间
 
 
 class User(UserMixin, db.Model):
@@ -76,8 +76,8 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    followed = db.relationship('Follow',
-                               foreign_keys=[Follow.follower_id],
+    followed = db.relationship('Follow',  #指定关联表
+                               foreign_keys=[Follow.follower_id],  #在关联表的多个外键中指定一个
                                backref=db.backref('follower', lazy='joined'),
                                lazy='dynamic',
                                cascade='all, delete-orphan')
@@ -204,7 +204,7 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
-    def ping(self):
+    def ping(self): #刷新用户的最后访问时间
         self.last_seen = datetime.utcnow()
         db.session.add(self)
 
@@ -217,21 +217,21 @@ class User(UserMixin, db.Model):
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
             url=url, hash=hash, size=size, default=default, rating=rating)
 
-    def follow(self, user):
+    def follow(self, user):  # 关注某用户
         if not self.is_following(user):
             f = Follow(follower=self, followed=user)
             db.session.add(f)
 
-    def unfollow(self, user):
+    def unfollow(self, user): # 取关某用户
         f = self.followed.filter_by(followed_id=user.id).first()
         if f:
             db.session.delete(f)
 
-    def is_following(self, user):
+    def is_following(self, user):  # 判断是否关注某用户
         return self.followed.filter_by(
             followed_id=user.id).first() is not None
 
-    def is_followed_by(self, user):
+    def is_followed_by(self, user):  # 判断是否被某用户关注
         return self.followers.filter_by(
             follower_id=user.id).first() is not None
 

@@ -42,6 +42,7 @@ def login():
     return render_template('auth/login.html', form=form)
 
 
+# 登出的路由
 @auth.route('/logout')
 @login_required
 def logout():
@@ -87,7 +88,7 @@ def resend_confirmation():
     flash('一份确认邮件已经发往你的邮箱！')
     return redirect(url_for('main.index'))
 
-
+# 修改密码
 @auth.route('/change-password', methods=['GET', 'POST'])
 @login_required
 def change_password():
@@ -104,6 +105,7 @@ def change_password():
     return render_template('auth/change_password.html', form=form)
 
 
+# 发送重置密码链接
 @auth.route('/reset', methods=['GET', 'POST'])
 def password_reset_request():
     if not current_user.is_anonymous:
@@ -123,6 +125,7 @@ def password_reset_request():
     return render_template('auth/reset_password.html', form=form)
 
 
+# 重置密码的路由
 @auth.route('/reset/<token>', methods=['GET', 'POST'])
 def password_reset(token):
     if not current_user.is_anonymous:
@@ -141,6 +144,7 @@ def password_reset(token):
     return render_template('auth/reset_password.html', form=form)
 
 
+# 发送修改电子邮箱链接的路由
 @auth.route('/change-email', methods=['GET', 'POST'])
 @login_required
 def change_email_request():
