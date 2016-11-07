@@ -32,7 +32,7 @@ manager.add_command('db', MigrateCommand)
 
 @manager.command
 def test(coverage=False):
-    """开始测试。"""
+    """Run Test."""
     if coverage and not os.environ.get('FLASK_COVERAGE'):
         import sys
         os.environ['FLASK_COVERAGE'] = '1'
