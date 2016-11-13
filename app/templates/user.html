@@ -12,7 +12,7 @@
         <p>
             {% if user.name %}{{ user.name }}<br>{% endif %}
             {% if user.location %}
-                来自 <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a><br>
+                来自 <a href="http://ditu.amap.com/search?query={{ user.location }}">{{ user.location }}</a><br>
             {% endif %}
         </p>
         {% endif %}
@@ -25,9 +25,9 @@
         <p>
             {% if current_user.can(Permission.FOLLOW) and user != current_user %}
                 {% if not current_user.is_following(user) %}
-                <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary">关注</a>
+                <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary"><i class="fa fa-user-plus"></i> 关注</a>
                 {% else %}
-                <a href="{{ url_for('.unfollow', username=user.username) }}" class="btn btn-default">取消关注</a>
+                <a href="{{ url_for('.unfollow', username=user.username) }}" class="btn btn-default"><i class="fa fa-user-times"></i> 取消关注</a>
                 {% endif %}
             {% endif %}
             <a href="{{ url_for('.followers', username=user.username) }}">关注者: <span class="badge">{{ user.followers.count() - 1 }}人</span></a>

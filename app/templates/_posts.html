@@ -21,20 +21,20 @@
                 {% endif %}
             </div>
             <div class="post-footer">
+                <a href="{{ url_for('.post', id=post.id) }}" title="原文链接">
+                    <span class="label label-default"><i class="fa fa-link"></i> </span>
+                </a>
                 {% if current_user == post.author %}
-                <a href="{{ url_for('.edit', id=post.id) }}">
-                    <span class="label label-primary">修改</span>
+                <a href="{{ url_for('.edit', id=post.id) }}" title="编辑">
+                    <span class="label label-primary"><i class="fa fa-pencil"></i> </span>
                 </a>
                 {% elif current_user.is_administrator() %}
-                <a href="{{ url_for('.edit', id=post.id) }}">
-                    <span class="label label-primary">修改 [管理员]</span>
+                <a href="{{ url_for('.edit', id=post.id) }}" title="编辑[管理员]">
+                    <span class="label label-primary"><i class="fa fa-edit"></i></span>
                 </a>
                 {% endif %}
-                <a href="{{ url_for('.post', id=post.id) }}">
-                    <span class="label label-default">原文链接</span>
-                </a>
-                <a href="{{ url_for('.post', id=post.id) }}#comments">
-                    <span class="label label-primary">{{ post.comments.count() }} 评论</span>
+                <a href="{{ url_for('.post', id=post.id) }}#comments" title="评论">
+                    <span class="label label-primary">{{ post.comments.count() }}<i class="fa fa-commenting"></i> </span>
                 </a>
             </div>
         </div>
